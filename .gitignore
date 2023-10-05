@@ -1,0 +1,8 @@
+*.o
+*.d
+_mkc_*
+bench_malloc
+bench_aligned_alloc
+forward_list
+forward_list64
+.gitignore
