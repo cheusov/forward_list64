@@ -22,11 +22,15 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "bench_alloc.h"
 
 int main() {
     for (unsigned i = 0; i < BENCH_ALLOC_ITEM_COUNT; ++i) {
-        (void)aligned_alloc(64, 64);
+        if (!aligned_alloc(64, 64)) {
+            perror("aligned_alloc(3) failed");
+            return 1;
+        }
     }
 
     return 0;

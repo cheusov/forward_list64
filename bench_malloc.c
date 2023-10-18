@@ -22,11 +22,15 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "bench_alloc.h"
 
 int main() {
     for (unsigned i = 0; i < BENCH_ALLOC_ITEM_COUNT; ++i) {
-        (void)malloc(64);
+        if (!malloc(64)) {
+            perror("malloc(3) failed");
+            return 1;
+        }
     }
 
     return 0;
