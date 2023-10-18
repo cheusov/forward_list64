@@ -16,6 +16,9 @@ add_executable(forward_list
 add_executable(bench_aligned_alloc
         bench_aligned_alloc.c
         bench_alloc.h)
+add_executable(bench_posix_memalign
+        bench_posix_memalign.c
+        bench_alloc.h)
 add_executable(bench_malloc
         bench_malloc.c
         bench_alloc.h)
