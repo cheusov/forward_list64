@@ -1,9 +1,10 @@
 PROGS               =	forward_list64 forward_list \
 	bench_aligned_alloc bench_malloc forward_list64_test \
-	bench_cacheline
+	bench_cacheline bench_posix_memalign
 
 SRCS.forward_list64      =	forward_list64.cc
 SRCS.forward_list        =	forward_list.cc
+SRCS.bench_posix_memalign=	bench_posix_memalign.c
 SRCS.bench_aligned_alloc =	bench_aligned_alloc.c
 SRCS.bench_malloc        =	bench_malloc.c
 SRCS.bench_cacheline     =	bench_cacheline.c
