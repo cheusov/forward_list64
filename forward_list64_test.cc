@@ -201,7 +201,8 @@ static void empty(ListType &l) {
     l.push_front(l.empty());
 }
 
-int main()
+int main(int argc, char **argv);
+int main(int argc, char **argv)
 {
     create_list(list);
     create_list(list64);

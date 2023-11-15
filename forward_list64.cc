@@ -137,7 +137,8 @@ static int main2()
 	return 0;
 }
 
-int main()
+int main(int argc, char **argv);
+int main(int argc, char **argv)
 {
     typedef forward_list64<mytype> list_type;
     list_type list;

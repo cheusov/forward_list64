@@ -5,7 +5,9 @@
 // #define COUNT (32*1024*4)
 #define COUNT 0x20000
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv);
+int main(int argc, char **argv)
+{
     uint8_t *ptr = aligned_alloc(64, COUNT);
     if (!ptr) {
         perror("aligned_alloc(3) failed");

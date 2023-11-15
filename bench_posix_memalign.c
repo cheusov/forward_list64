@@ -25,7 +25,9 @@
 #include <stdio.h>
 #include "bench_alloc.h"
 
-int main() {
+int main(int argc, char **argv);
+int main(int argc, char **argv)
+{
     void *p = NULL;
     for (unsigned i = 0; i < BENCH_ALLOC_ITEM_COUNT; ++i) {
         if (posix_memalign(&p, 64, 64)) {

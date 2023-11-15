@@ -26,7 +26,8 @@
 #include <cstdint>
 #include "bench_struct.h"
 
-int main()
+int main(int argc, char **argv);
+int main(int argc, char **argv)
 {
     typedef std::forward_list<mytype> list_type;
     list_type list;

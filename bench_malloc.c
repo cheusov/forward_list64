@@ -25,7 +25,9 @@
 #include <stdio.h>
 #include "bench_alloc.h"
 
-int main() {
+int main(int argc, char **argv);
+int main(int argc, char **argv)
+{
     for (unsigned i = 0; i < BENCH_ALLOC_ITEM_COUNT; ++i) {
         if (!malloc(64)) {
             perror("malloc(3) failed");
