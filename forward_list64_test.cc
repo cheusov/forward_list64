@@ -50,8 +50,10 @@ void print_list3(list64_type &list) {
 static list64_type list64;
 static list_type list;
 
-static void check()
+static void check(std::string message)
 {
+    std::cerr << message << "... ";
+
     std::string list_items;
     for (auto item: list) {
         list_items += ' ';
@@ -64,9 +66,11 @@ static void check()
         list64_items += std::to_string(item);
     }
 
-    std::cout << list_items << '\n';
-    std::cout << list64_items << '\n';
+    //std::cout << list_items << '\n';
+    //std::cout << list64_items << '\n';
     assert(list64_items == list_items);
+
+    std::cerr << "ok\n";
 }
 
 template <typename ListType>
@@ -206,81 +210,76 @@ int main(int argc, char **argv)
 {
     create_list(list);
     create_list(list64);
-    check();
+    check(".push_front");
 
     clear_list(list);
     clear_list(list64);
-    check();
+    check(".clear");
 
     empty(list);
     empty(list64);
-    check();
+    check(".empty");
 
     for (int n = 0; n < 80; ++n) {
         create_N_default_items(list, n);
         create_N_default_items(list64, n);
-        check();
     }
+    check(".constructor(int)");
 
     create_list_of_5(list, 40);
     create_list_of_5(list64, 40);
-    check();
+    check(".constructor(int, const T&) and std::swap");
 
     create_list_from_array(list);
     create_list_from_array(list64);
-    check();
+    check(".constructor(IteratorT, IteratorT)");
 
     copy(list);
     copy(list64);
-    check();
+    check(".constructor(const forward_list64 &)");
 
     move(list);
     move(list64);
-    check();
+    check(".constructor(forward_list64 &&)");
 
     initializer_list(list);
     initializer_list(list64);
-    check();
+    check(".constructor(std::initializer_list<T>)");
 
     assign(list);
     assign(list64);
-    check();
+    check(".operator = (const forward_list64 &)");
 
     assign_move(list);
     assign_move(list64);
-    check();
+    check(".operator = (forward_list64 &&)");
 
     assign_ilist(list);
     assign_ilist(list64);
-    check();
+    check(".operator = (std::initializer_list<T>)");
 
     assign_method1(list);
     assign_method1(list64);
-    check();
+    check(".assign(int, const T &)");
 
     assign_method2(list);
     assign_method2(list64);
-    check();
+    check(".assign(std::initializer_list<T>)");
 
     assign_method3(list);
     assign_method3(list64);
-    check();
+    check(".assign(IteratorT, IteratorT)");
 
     list.get_allocator();
     list64.get_allocator();
 
     front(list);
     front(list64);
-    check();
-
-    empty(list);
-    empty(list64);
-    check();
+    check(".front");
 
     while (!list.empty()) {
-        //std::cout << list.front() << '/' << list64.front() << '\n';
         list.pop_front();
         list64.pop_front();
-        check();
     }
+    check(".pop_front");
 }
