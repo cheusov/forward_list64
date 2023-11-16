@@ -17,6 +17,10 @@ CXXOPTS ?=	-O3 -g
 
 #LDFLAGS += -L/opt/pkg/lib -R/opt/pkg/lib -ljemalloc
 
+.PHONY: test
+test: all
+	@${.OBJDIR}/forward_list64_test
+
 .include <mkc.mk>
 
  # Created by Aleksey Cheusov <vle@gmx.net>
