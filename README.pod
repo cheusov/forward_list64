@@ -1,0 +1,141 @@
+=pod
+
+=head1 Overview:
+
+B<forward_list64> is a C++-17 class (B<forward_list64.h>)
+that behaves very similar to B<std::forward_list>.
+It is implemented in a one-file B<forward_list64.h>.
+So, you can just copy it to your project.
+
+Basic idea of this implementation is to use 64-byte cache lines for better efficiency.
+That is, each node of the list is 64-byte in size and is alligned to 64 bytes
+(on most desktop/server/mobile CPUs the size of cache line is 64 byte).
+64-byte node allows to contain
+more than one item in it, thus minimizing the number of memory allocations
+and deallocations. Also, alignment to 64 byte minimizes the number of cache misses.
+
+=head1 Performance and benchmarks
+
+On my systems basic operations on B<forward_list64> are B<2 to 15 times faster
+than B<std::forward_list>>.
+However, performance of B<forward_list64> hightly depends on two factors:
+
+=over 2
+
+=item *
+
+size of template argument
+
+=item *
+
+implementation of I<aligned_alloc> function in libc
+
+=back
+
+Unfortunately, many systems including glibc-based Linuxes (glibc<=2.32) and
+macOS (Darwin<=23.1.0) provide libc with extreamely inefficient
+I<aligned_alloc>. On these systems
+I<aligned_alloc(64, 64)> works 4-18 times slower than I<malloc(64)>.
+Obviously, this dramatically affects the overall performance. On the other hand,
+on NetBSD and FreeBSD operating systems, where I<jemalloc> is the default,
+I<aligned_alloc(64, 64)> has the same performance as I<malloc(64)>.
+
+So, on Linuxes and macOS I'd recomend use the following open source
+malloc implementations:
+
+=over 2
+
+=item *
+
+Google's I<tcmalloc> L<https://google.github.io/tcmalloc/overview.html>
+
+=item *
+
+FreeBSD's I<jemalloc> L<https://jemalloc.net/>
+
+=item *
+
+Microsoft's I<mimalloc> L<https://github.com/microsoft/mimalloc>
+
+=back
+
+=head1 Implementation
+
+Internal structure of B<forward_list64> node depends on template argument size and 
+the size of pointer. For example, if
+the size of template argument is 1 byte and the size of pointer is 8 bytes, then the
+node structure is as follows.
+    
+    struct alignas(64) Node {
+        // 8 + 56 == 64
+        std::uintptr_t next; // pointer to the next node and node capacity, 8 bytes
+        std::uint8_t items[56]; // 56 bytes
+    }
+
+If the size of pointer is 4 byte and the size of template argument is 4 bytes, then
+the structure is as follows.
+
+    struct alignas(64) Node {
+        // 4 + 60 == 64
+        std::uintptr_t next; // pointer to the next node and node capacity, 4 bytes
+        uint32_t items[15]; // 15*4=60 bytes
+    }
+
+This functionality is implemented with the help of C++ partial specialization.
+
+The number of items in the node, AKA node capacity, is stored in lower 6 bits
+of the pointer to the next node.
+
+=head1 Limitations
+
+B<forward_list64> is not fully compatible with C++ standards and has some limitations:
+
+=over 2
+
+=item *
+
+inserting to the middle of list is not supported
+
+=item *
+
+removing to the middle of list is not supported
+
+=item *
+
+template argument for Allocator is ignore for now
+
+=item *
+
+some methods are not implemented yet
+
+=back
+
+=head1 Links
+
+=over 2
+
+=item "Algorithms for Modern Hardware" book by Sergey Slotin
+
+L<https://en.algorithmica.org/hpc/>
+
+=item Google's I<tcmalloc>
+
+ L<https://google.github.io/tcmalloc/overview.html>
+
+=item I<jemalloc>
+
+L<https://jemalloc.net/>
+
+=item Microsoft's I<mimalloc>
+
+L<https://github.com/microsoft/mimalloc>
+
+=back
+
+=head1 Copyright
+
+Written by Aleksey Cheusov <vle@gmx.net>
+
+https://github.com/cheusov/forward_list64
+
+=cut
