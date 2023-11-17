@@ -2,8 +2,8 @@
 
 =head1 Overview:
 
-B<forward_list64> is a C++-17 class (B<forward_list64.h>)
-that behaves very similar to B<std::forward_list>.
+B<forward_list64> is a C++-17 class
+which is very similar to B<std::forward_list>.
 It is implemented in a one-file B<forward_list64.h>.
 So, you can just copy it to your project.
 
@@ -24,7 +24,7 @@ However, performance of B<forward_list64> hightly depends on two factors:
 
 =item *
 
-size of template argument
+size of item
 
 =item *
 
@@ -32,15 +32,15 @@ implementation of I<aligned_alloc> function in libc
 
 =back
 
-Unfortunately, many systems including glibc-based Linuxes (glibc<=2.32) and
-macOS (Darwin<=23.1.0) provide libc with extreamely inefficient
+Unfortunately, many systems including glibc-based Linux-es (glibc<=2.32) and
+macOS (Darwin<=23.1.0) provide libc with extreamly inefficient
 I<aligned_alloc>. On these systems
 I<aligned_alloc(64, 64)> works 4-18 times slower than I<malloc(64)>.
 Obviously, this dramatically affects the overall performance. On the other hand,
 on NetBSD and FreeBSD operating systems, where I<jemalloc> is the default,
 I<aligned_alloc(64, 64)> has the same performance as I<malloc(64)>.
 
-So, on Linuxes and macOS I'd recommend use the following open source
+So, on Linux-es and macOS I'd recommend use the following open source
 malloc implementations:
 
 =over 2
@@ -61,9 +61,9 @@ Microsoft's I<mimalloc> L<https://github.com/microsoft/mimalloc>
 
 =head1 Implementation
 
-Internal structure of B<forward_list64> node depends on template argument size and 
+Internal structure of B<forward_list64> node depends on item size and
 the size of pointer. For example, if
-the size of template argument is 1 byte and the size of pointer is 8 bytes, then the
+the size of item is 1 byte and the size of pointer is 8 bytes, then the
 node structure is as follows.
     
     struct alignas(64) Node {
@@ -72,8 +72,8 @@ node structure is as follows.
         std::uint8_t items[56]; // 56 bytes
     }
 
-If the size of pointer is 4 byte and the size of template argument is 4 bytes, then
-the structure is as follows.
+If the size of item is 4 bytes and the size of pointer is also 4 bytes, then the
+node structure is as follows.
 
     struct alignas(64) Node {
         // 4 + 60 == 64
@@ -81,14 +81,23 @@ the structure is as follows.
         uint32_t items[15]; // 15*4=60 bytes
     }
 
-This functionality is implemented with the help of C++ partial specialization.
+If the size of item is >=28 bytes (on 64-bit systems) or >=30 bytes (on 32-bit systems), then
+the structure of Node is very simple and similar to B<std::forward_list>. As you can see,
+it doesn't fit into 64 bytes and is not aligned to cache line.
 
-The number of items in the node, AKA node capacity, is stored in lower 6 bits
+    struct Node {
+        std::uintptr_t next;
+        T item;
+    }
+
+The structure of Node is configured automatically with the help of C++ partial specialization.
+
+The number of items in the node is stored in lower 6 bits
 of the pointer to the next node.
 
 =head1 Project
 
-forward_list64 build system is mk-configure (https://github.com/cheusov/mk-configure).
+B<forward_list64> build system is mk-configure (https://github.com/cheusov/mk-configure).
 Do not use GNU make. It won't work!
 
 Project consists of the following components:
@@ -129,11 +138,11 @@ inserting to the middle of list is not supported
 
 =item *
 
-removing to the middle of list is not supported
+removing from the middle of list is not supported
 
 =item *
 
-template argument for Allocator is ignore for now
+template argument for Allocator is ignored for now
 
 =item *
 
@@ -151,7 +160,7 @@ L<https://en.algorithmica.org/hpc/>
 
 =item Google's I<tcmalloc>
 
- L<https://google.github.io/tcmalloc/overview.html>
+L<https://google.github.io/tcmalloc/overview.html>
 
 =item I<jemalloc>
 
