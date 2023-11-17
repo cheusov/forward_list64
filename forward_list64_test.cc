@@ -55,19 +55,17 @@ static void check(std::string message)
     std::cerr << message << "... ";
 
     std::string list_items;
-    for (auto item: list) {
+    for (const auto &item: list) {
         list_items += ' ';
         list_items += std::to_string(item);
     }
 
     std::string list64_items;
-    for (auto item: list64) {
+    for (const auto &item: list64) {
         list64_items += ' ';
         list64_items += std::to_string(item);
     }
 
-    //std::cout << list_items << '\n';
-    //std::cout << list64_items << '\n';
     assert(list64_items == list_items);
 
     std::cerr << "ok\n";
