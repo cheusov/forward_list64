@@ -40,7 +40,7 @@ Obviously, this dramatically affects the overall performance. On the other hand,
 on NetBSD and FreeBSD operating systems, where I<jemalloc> is the default,
 I<aligned_alloc(64, 64)> has the same performance as I<malloc(64)>.
 
-So, on Linuxes and macOS I'd recomend use the following open source
+So, on Linuxes and macOS I'd recommend use the following open source
 malloc implementations:
 
 =over 2
@@ -85,6 +85,37 @@ This functionality is implemented with the help of C++ partial specialization.
 
 The number of items in the node, AKA node capacity, is stored in lower 6 bits
 of the pointer to the next node.
+
+=head1 Project
+
+forward_list64 build system is mk-configure (https://github.com/cheusov/mk-configure).
+Do not use GNU make. It won't work!
+
+Project consists of the following components:
+
+=over 2
+
+=item *
+
+forward_list64.h -- forward_list64 class implementation, you can copy this file to your system by hand
+
+=item *
+
+forward_list64_test -- test application
+
+=item *
+
+forward_list.cc and forward_list64.cc -- tools that may be used for benchmarking
+
+=item *
+
+bench_malloc.c, bench_posix_memalign.c and bench_aligned_alloc.c -- tools for benchmarking memory allocation functions
+
+=item *
+
+bench_cacheline.c -- tool for experiments with cache lines
+
+=back
 
 =head1 Limitations
 
