@@ -17,9 +17,14 @@ SRCS.forward_list64_test =	forward_list64_test.cc
 WARNS  =	4
 CXXSTD =	c++17
 
+# Replace -O3 with -O0 for debugging
 CXXOPTS ?=	-O3 -g
 
-#LDFLAGS += -L/opt/pkg/lib -R/opt/pkg/lib -ljemalloc
+# Uncomment and edit the following for linking with jemalloc, tcmalloc or mimalloc
+#LDFLAGS += -L/usr/pkg/lib -R/usr/pkg/lib
+#LDADD  +=	-ltcmalloc_minimal
+#LDADD  +=	-ljemalloc
+#LDADD  +=	-lmimalloc
 
 .PHONY: test
 test: all
