@@ -171,6 +171,8 @@ class forward_list64 {
 private:
     std::uintptr_t m_first_block = 0;
 
+    typedef __forward_list64_impl::list_item<T> list_node_t;
+
     // TODO: allocator is not used yet
     Allocator m_allocator;
 
@@ -186,7 +188,7 @@ public:
 
 public:
     class const_iterator {
-         __forward_list64_impl::list_item<T> *block_ptr;
+        list_node_t *block_ptr;
         T *value_ptr;
         T *value_end;
 
@@ -218,7 +220,7 @@ public:
     };
 
     class iterator {
-         __forward_list64_impl::list_item<T> *block_ptr;
+        list_node_t *block_ptr;
         T *value_ptr;
         T *value_end;
 
@@ -373,12 +375,12 @@ void forward_list64<T, Allocator>::assign(
     std::uintptr_t last_block = 0;
     ssize_t count = _count;
     while (count > 0) {
-        auto block = new  __forward_list64_impl::list_item<T>();
+        auto block = new list_node_t();
         block->next = last_block;
 
         int item_count;
-        if (count >  __forward_list64_impl::list_item<T>::max_count)
-            item_count =  __forward_list64_impl::list_item<T>::max_count;
+        if (count > list_node_t::max_count)
+            item_count = list_node_t::max_count;
         else
             item_count = int(count);
 
@@ -387,7 +389,7 @@ void forward_list64<T, Allocator>::assign(
 
         last_block = (std::uintptr_t(block) | item_count);
 
-        count -=  __forward_list64_impl::list_item<T>::max_count;
+        count -= list_node_t::max_count;
     }
     m_first_block = last_block;
 }
@@ -443,12 +445,12 @@ void forward_list64<T, Allocator>::copy(
     std::uintptr_t old_block = other.m_first_block;
     std::uintptr_t *last_new_block = &m_first_block;
     while (old_block) {
-        auto old_block_ptr = reinterpret_cast<__forward_list64_impl::list_item<T> *>(
-                old_block &  __forward_list64_impl::list_item<T>::pointer_mask);
+        auto old_block_ptr = reinterpret_cast<list_node_t *>(
+                old_block & list_node_t::pointer_mask);
         auto old_item_count = std::uintptr_t(old_block)
-                &  __forward_list64_impl::list_item<T>::item_count_mask;
+                & list_node_t::item_count_mask;
 
-        auto new_block_ptr = new  __forward_list64_impl::list_item<T>(*old_block_ptr);
+        auto new_block_ptr = new list_node_t(*old_block_ptr);
         *last_new_block = std::uintptr_t(new_block_ptr) | old_item_count;
         last_new_block = &old_block_ptr->next;
 
@@ -484,18 +486,18 @@ forward_list64<T, Allocator>::~forward_list64() {
 
 template <typename T, typename Allocator>
 void forward_list64<T, Allocator>::push_front(const T& value) {
-    unsigned items_in_block = m_first_block &  __forward_list64_impl::list_item<T>::item_count_mask;
-    std::uintptr_t first_block_value = m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask;
+    unsigned items_in_block = m_first_block & list_node_t::item_count_mask;
+    std::uintptr_t first_block_value = m_first_block & list_node_t::pointer_mask;
 
     if (first_block_value == 0) {
-        auto first_block_ptr = new  __forward_list64_impl::list_item<T>();
+        auto first_block_ptr = new list_node_t();
         first_block_ptr->next = 0;
         first_block_value = reinterpret_cast<std::uintptr_t> (first_block_ptr);
     }
 
-    auto *first_block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(first_block_value);
-    if (items_in_block ==  __forward_list64_impl::list_item<T>::max_count) {
-        auto *new_first_block = new  __forward_list64_impl::list_item<T>();
+    auto *first_block_ptr = reinterpret_cast<list_node_t *>(first_block_value);
+    if (items_in_block == list_node_t::max_count) {
+        auto *new_first_block = new list_node_t();
         new_first_block->next = m_first_block;
         new_first_block->items[0] = value;
         m_first_block = reinterpret_cast<uintptr_t>(new_first_block) | 1;
@@ -541,11 +543,11 @@ typename forward_list64<T, Allocator>::iterator forward_list64<T, Allocator>::en
 
 template <typename T, typename Allocator>
 void forward_list64<T, Allocator>::clear() noexcept {
-    auto block = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask);
+    auto block = reinterpret_cast<list_node_t *>(
+            m_first_block & list_node_t::pointer_mask);
     while (block != nullptr) {
-        auto next = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-                block->next &  __forward_list64_impl::list_item<T>::pointer_mask);
+        auto next = reinterpret_cast<list_node_t *>(
+                block->next & list_node_t::pointer_mask);
         delete block;
         block = next;
     }
@@ -567,9 +569,9 @@ forward_list64<T, Allocator>::const_iterator::const_iterator(const const_iterato
 
 template <typename T, typename Allocator>
 forward_list64<T, Allocator>::const_iterator::const_iterator(std::uintptr_t block) {
-    unsigned items_in_block = block &  __forward_list64_impl::list_item<T>::item_count_mask;
-    block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            block &  __forward_list64_impl::list_item<T>::pointer_mask);
+    unsigned items_in_block = block & list_node_t::item_count_mask;
+    block_ptr = reinterpret_cast<list_node_t *>(
+            block & list_node_t::pointer_mask);
     value_end = block_ptr->items - 1;
     value_ptr = value_end + items_in_block;
 }
@@ -592,9 +594,9 @@ forward_list64<T, Allocator>::const_iterator::operator ++ () {
     --value_ptr;
     if (value_ptr == value_end) {
         auto block = block_ptr->next;
-        unsigned items_in_block = block &  __forward_list64_impl::list_item<T>::item_count_mask;
-        block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-                block &  __forward_list64_impl::list_item<T>::pointer_mask);
+        unsigned items_in_block = block & list_node_t::item_count_mask;
+        block_ptr = reinterpret_cast<list_node_t *>(
+                block & list_node_t::pointer_mask);
         value_end = block_ptr->items - 1;
         value_ptr = value_end + items_in_block;
     }
@@ -659,9 +661,9 @@ forward_list64<T, Allocator>::iterator::iterator(const forward_list64<T, Allocat
 
 template <typename T, typename Allocator>
 forward_list64<T, Allocator>::iterator::iterator(std::uintptr_t block) {
-    unsigned items_in_block = block &  __forward_list64_impl::list_item<T>::item_count_mask;
-    block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            block &  __forward_list64_impl::list_item<T>::pointer_mask);
+    unsigned items_in_block = block & list_node_t::item_count_mask;
+    block_ptr = reinterpret_cast<list_node_t *>(
+            block & list_node_t::pointer_mask);
     value_end = block_ptr->items - 1;
     value_ptr = value_end + items_in_block;
 }
@@ -684,9 +686,9 @@ forward_list64<T, Allocator>::iterator::iterator::operator ++ () {
     --value_ptr;
     if (value_ptr == value_end) {
         auto block = block_ptr->next;
-        unsigned items_in_block = block &  __forward_list64_impl::list_item<T>::item_count_mask;
-        block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-                block &  __forward_list64_impl::list_item<T>::pointer_mask);
+        unsigned items_in_block = block & list_node_t::item_count_mask;
+        block_ptr = reinterpret_cast<list_node_t *>(
+                block & list_node_t::pointer_mask);
         value_end = block_ptr->items - 1;
         value_ptr = value_end + items_in_block;
     }
@@ -722,27 +724,27 @@ forward_list64<T, Allocator>::get_allocator() const noexcept {
 template <typename T, typename Allocator>
 typename forward_list64<T, Allocator>::reference
 forward_list64<T, Allocator>::front() {
-    unsigned items_in_block = m_first_block &  __forward_list64_impl::list_item<T>::item_count_mask;
-    auto first_block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask);
+    unsigned items_in_block = m_first_block & list_node_t::item_count_mask;
+    auto first_block_ptr = reinterpret_cast<list_node_t *>(
+            m_first_block & list_node_t::pointer_mask);
     return first_block_ptr->items[items_in_block-1];
 }
 
 template <typename T, typename Allocator>
 typename forward_list64<T, Allocator>::const_reference
 forward_list64<T, Allocator>::front() const {
-    unsigned items_in_block = m_first_block &  __forward_list64_impl::list_item<T>::item_count_mask;
-    auto first_block_ptr = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask);
+    unsigned items_in_block = m_first_block & list_node_t::item_count_mask;
+    auto first_block_ptr = reinterpret_cast<list_node_t *>(
+            m_first_block & list_node_t::pointer_mask);
     return first_block_ptr->items[items_in_block-1];
 }
 
 template <typename T, typename Allocator>
 void forward_list64<T, Allocator>::pop_front() {
-    unsigned items_in_block = m_first_block &  __forward_list64_impl::list_item<T>::item_count_mask;
+    unsigned items_in_block = m_first_block & list_node_t::item_count_mask;
     if (items_in_block == 1) {
-        auto first_block_ptr = reinterpret_cast <__forward_list64_impl::list_item<T> *>(
-                m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask);
+        auto first_block_ptr = reinterpret_cast <list_node_t *>(
+                m_first_block & list_node_t::pointer_mask);
         m_first_block = first_block_ptr->next;
         delete first_block_ptr;
     } else {
