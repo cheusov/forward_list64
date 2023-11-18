@@ -555,6 +555,7 @@ void forward_list64<T, Allocator>::clear() noexcept {
 template <typename T, typename Allocator>
 inline void forward_list64<T, Allocator>::swap(forward_list64<T, Allocator>& other) noexcept {
     std::swap(this->m_first_block, other.m_first_block);
+    std::swap(this->m_allocator, other.m_allocator);
 }
 
 template <typename T, typename Allocator>
