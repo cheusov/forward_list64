@@ -1,4 +1,4 @@
-PROGS               =	bench_forward_list64 bench_forward_list \
+PROGS =	bench_forward_list64 bench_forward_list \
 	bench_aligned_alloc bench_malloc forward_list64_test \
 	bench_cacheline bench_posix_memalign
 
