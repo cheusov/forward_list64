@@ -22,10 +22,42 @@
  */
 
 #include <string>
+#include <iostream>
+#include <cstdint>
 
+///////////////////////////////////////
+// user-defined settings
 struct mytype {
     char _[8];
 };
-static mytype value;
 
 const static unsigned BENCH_COUNT=30000000;
+
+///////////////////////////////////////
+// main code
+static mytype value;
+
+static void usage() {
+    std::cerr << "usage: forward_list[64] COUNT\n";
+    exit(1);
+}
+
+int main(int argc, char **argv);
+int main(int argc, char **argv)
+{
+    --argc;
+    ++argv;
+    if (argc != 1) {
+        usage();
+    }
+
+    int count = std::stoi(argv[0]);
+
+    typedef LIST_TYPE list_type;
+    list_type list;
+    for (int i = 0; i < count; ++i) {
+        list.push_front(value);
+    }
+
+    return 0;
+}

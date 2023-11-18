@@ -22,18 +22,7 @@
  */
 
 #include <forward_list>
-#include <string>
-#include <cstdint>
-#include "bench_struct.h"
 
-int main(int argc, char **argv);
-int main(int argc, char **argv)
-{
-    typedef std::forward_list<mytype> list_type;
-    list_type list;
-    for (unsigned i = 0; i < BENCH_COUNT; ++i) {
-        list.push_front(value);
-    }
+#define LIST_TYPE std::forward_list<mytype>
 
-    return 0;
-}
+#include "bench_code.h"

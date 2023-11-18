@@ -21,19 +21,8 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <string>
-
 #include "forward_list64.h"
-#include "bench_struct.h"
 
-int main(int argc, char **argv);
-int main(int argc, char **argv)
-{
-    typedef forward_list64<mytype> list_type;
-    list_type list;
-    for (unsigned i = 0; i < BENCH_COUNT; ++i) {
-        list.push_front(value);
-    }
+#define LIST_TYPE forward_list64<mytype>
 
-    return 0;
-}
+#include "bench_code.h"
