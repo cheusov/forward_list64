@@ -40,7 +40,7 @@ Obviously, this dramatically affects the overall performance. On the other hand,
 on NetBSD and FreeBSD operating systems, where I<jemalloc> is the default,
 I<aligned_alloc(64, 64)> has the same performance as I<malloc(64)>.
 
-So, on Linux-es and macOS I'd recommend use the following open source
+So, on Linux-es and macOS I'd recommend use one of the following open source
 malloc implementations:
 
 =over 2
