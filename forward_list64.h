@@ -397,18 +397,6 @@ forward_list64<T, Allocator>::forward_list64(size_type _count, const Allocator& 
         forward_list64<T, Allocator>::forward_list64(_count, T(), alloc) {
 }
 
-/*
-template <class InputIt>
-static size_t size(InputIt begin, InputIt end) {
-    size_t ret = 0;
-    while (begin != end) {
-        ++ret;
-        ++begin;
-    }
-    return ret;
-}
-*/
-
 template <typename T, typename Allocator>
 template <class InputIt>
 forward_list64<T, Allocator>::forward_list64(
@@ -450,7 +438,8 @@ forward_list64<T, Allocator>::forward_list64(const forward_list64& other)
 
 template <typename T, typename Allocator>
 void forward_list64<T, Allocator>::copy(
-        const forward_list64<T, Allocator>& other) {
+        const forward_list64<T, Allocator>& other)
+{
     std::uintptr_t old_block = other.m_first_block;
     std::uintptr_t *last_new_block = &m_first_block;
     while (old_block) {
@@ -469,9 +458,8 @@ void forward_list64<T, Allocator>::copy(
 
 template <typename T, typename Allocator>
 forward_list64<T, Allocator>::forward_list64(const forward_list64& other, const Allocator& alloc )
-    : m_allocator(alloc)
+    : m_first_block(0), m_allocator(alloc)
 {
-    m_first_block = 0;
     copy(other);
 }
 
@@ -491,14 +479,7 @@ forward_list64<T, Allocator>::forward_list64(
 
 template <typename T, typename Allocator>
 forward_list64<T, Allocator>::~forward_list64() {
-    auto block = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-            m_first_block &  __forward_list64_impl::list_item<T>::pointer_mask);
-    while (block != nullptr) {
-        auto next = reinterpret_cast< __forward_list64_impl::list_item<T> *>(
-                block->next &  __forward_list64_impl::list_item<T>::pointer_mask);
-        delete block;
-        block = next;
-    }
+    clear();
 }
 
 template <typename T, typename Allocator>
@@ -527,25 +508,25 @@ void forward_list64<T, Allocator>::push_front(const T& value) {
 template <typename T, typename Allocator>
 typename forward_list64<T, Allocator>::const_iterator
         forward_list64<T, Allocator>::begin() const noexcept {
-    return const_iterator(m_first_block);
+    return cbegin();
 }
 
 template <typename T, typename Allocator>
 typename forward_list64<T, Allocator>::const_iterator
         forward_list64<T, Allocator>::cbegin() const noexcept {
-    return begin();
+    return const_iterator(m_first_block);
 }
 
 template <typename T, typename Allocator>
 inline typename forward_list64<T, Allocator>::const_iterator
 forward_list64<T, Allocator>::end() const noexcept {
-    return const_iterator(0);
+    return cend();
 }
 
 template <typename T, typename Allocator>
 inline typename forward_list64<T, Allocator>::const_iterator
 forward_list64<T, Allocator>::cend() const noexcept {
-    return end();
+    return const_iterator(0);
 }
 
 template <typename T, typename Allocator>
