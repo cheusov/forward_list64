@@ -114,7 +114,7 @@ forward_list64_test -- test application
 
 =item *
 
-forward_list.cc and forward_list64.cc -- tools that may be used for benchmarking
+bench_forward_list.cc and bench_forward_list64.cc -- tools that may be used for benchmarking
 
 =item *
 

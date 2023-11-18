@@ -1,4 +1,4 @@
-PROGS               =	forward_list64 forward_list \
+PROGS               =	bench_forward_list64 bench_forward_list \
 	bench_aligned_alloc bench_malloc forward_list64_test \
 	bench_cacheline bench_posix_memalign
 
@@ -6,8 +6,8 @@ MKINSTALL                =	no
 
 #INCS                     =	forward_list64.h
 
-SRCS.forward_list64      =	forward_list64.cc
-SRCS.forward_list        =	forward_list.cc
+SRCS.bench_forward_list64=	bench_forward_list64.cc
+SRCS.bench_forward_list  =	bench_forward_list.cc
 SRCS.bench_posix_memalign=	bench_posix_memalign.c
 SRCS.bench_aligned_alloc =	bench_aligned_alloc.c
 SRCS.bench_malloc        =	bench_malloc.c

@@ -38,7 +38,7 @@ const static unsigned BENCH_COUNT=30000000;
 static mytype value;
 
 static void usage() {
-    std::cerr << "usage: forward_list[64] COUNT\n";
+    std::cerr << "usage: bench_forward_list[64] COUNT\n";
     exit(1);
 }
 
