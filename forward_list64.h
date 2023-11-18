@@ -368,6 +368,8 @@ void forward_list64<T, Allocator>::assign(
         size_type _count,
         const T& value)
 {
+    clear();
+
     std::uintptr_t last_block = 0;
     ssize_t count = _count;
     while (count > 0) {
@@ -661,9 +663,8 @@ template <typename T, typename Allocator>
 forward_list64<T, Allocator>& forward_list64<T, Allocator>::operator = (
         std::initializer_list<T> init)
 {
-    m_first_block = 0;
-    forward_list64<T, Allocator> temp(init);
-    std::swap(*this, temp);
+    clear();
+    copy(init);
     return *this;
 }
 
