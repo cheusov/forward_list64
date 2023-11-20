@@ -26,258 +26,290 @@
 
 #include "forward_list64.h"
 
-typedef std::forward_list<int> list_type;
-typedef forward_list64<int> list64_type;
+template <typename T>
+class forward_list64_test {
+private:
+    typedef forward_list64_test<T> self_type;
 
-template <typename list_type>
-void print_list2(const list_type &list) {
-    typename list_type::const_iterator begin = list.begin();
-    typename list_type::const_iterator end = list.end();
-    for (; begin != end; begin++) {
-        std::cout << *begin << '\n';
-    }
-}
+    forward_list64<T> list64;
+    std::forward_list<T> list;
 
-template <typename list_type>
-void print_list3(list64_type &list) {
-    typename list_type::iterator begin = list.begin();
-    typename list_type::iterator end = list.end();
-    for (; begin != end; begin++) {
-        std::cout << *begin << '\n';
-    }
-}
+    void check(std::string message) {
+        std::string list_items;
+        for (const auto &item: list) {
+            list_items += ' ';
+            list_items += std::to_string(item);
+        }
 
-static list64_type list64;
-static list_type list;
+        std::string list64_items;
+        for (const auto &item: list64) {
+            list64_items += ' ';
+            list64_items += std::to_string(item);
+        }
 
-static void check(std::string message)
-{
-    std::cerr << message << "... ";
+        if (list64_items != list_items) {
+            std::cerr << "list_items: " << list_items << '\n';
+            std::cerr << "list64_items: " << list64_items << '\n';
+            abort();
+        }
 
-    std::string list_items;
-    for (const auto &item: list) {
-        list_items += ' ';
-        list_items += std::to_string(item);
+        std::cerr << "ok\n";
     }
 
-    std::string list64_items;
-    for (const auto &item: list64) {
-        list64_items += ' ';
-        list64_items += std::to_string(item);
+    template <typename ListType>
+    void create_list(ListType &l, std::size_t n) {
+        for (int i = 0; i < n; ++i) {
+            l.push_front(10 + i);
+        }
+        for (auto it = l.cbegin(); it != l.cend(); ++it) {
+            l.push_front(*it);
+        }
     }
 
-    assert(list64_items == list_items);
-
-    std::cerr << "ok\n";
-}
-
-template <typename ListType>
-static void create_list(ListType &l) {
-    for (int i = 0; i < 10; ++i) {
-        l.push_front(10 + 10 * i);
+    template <typename ListType>
+    void clear_list(ListType &l) {
+        l.clear();
     }
-    for (auto it = l.cbegin(); it != l.cend(); ++it) {
-        l.push_front(*it);
+
+    template <typename ListType>
+    void create_N_default_items(ListType &l, std::size_t n) {
+        ListType local_list(n);
+        std::swap(local_list, l);
     }
-}
 
-template <typename ListType>
-static void clear_list(ListType &l) {
-    l.clear();
-}
-
-template <typename ListType>
-static void create_N_default_items(ListType &l, int n) {
-    ListType local_list(n);
-    std::swap(local_list, l);
-}
-
-template <typename ListType>
-static void create_list_of_5(ListType &l, size_t n) {
-    ListType local_list(n, 5);
-    std::swap(local_list, l);
-}
-
-template <typename ListType>
-static void create_list_from_array(ListType &l) {
-    static const int array[] = {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-    };
-    ListType local_list(array, array + std::size(array));
-    std::swap(local_list, l);
-}
-
-template <typename ListType>
-static void copy(ListType &l) {
-    ListType local_list(l);
-    std::swap(local_list, l);
-}
-
-template <typename ListType>
-static void move(ListType &l) {
-    ListType temp;
-    for (int i = 0; i < 100; i += 5) {
-        temp.push_front(i);
+    template <typename ListType>
+    void create_list_of_5(ListType &l, std::size_t n) {
+        ListType local_list(n, 5);
+        std::swap(local_list, l);
     }
-    ListType other_list(reinterpret_cast<ListType&&>(temp));
-    l.swap(other_list);
-}
 
-template <typename ListType>
-static void initializer_list(ListType &l) {
-    ListType temp {
-        10, 20, 30, 40, 50,
-        11, 21, 31, 41, 51,
-        12, 22, 32, 42, 52,
-        13, 23, 33, 43, 53
-    };
-    l.swap(temp);
-}
+    template <typename ListType>
+    void create_list_from_array(ListType &l) {
+        static const int array[] = {
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+        };
+        ListType local_list(array, array + std::size(array));
+        std::swap(local_list, l);
+    }
 
-template <typename ListType>
-static void assign(ListType &l) {
-    ListType temp {
-                          110, 120, 130, 140, 150,
-                          111, 121, 131, 141, 151,
-                          112, 122, 132, 142, 152,
-                          113, 123, 133, 143, 153
-                  };
-    l = temp;
-}
+    template <typename ListType>
+    void copy(ListType &l) {
+        ListType local_list(l);
+        std::swap(local_list, l);
+    }
 
-template <typename ListType>
-static void assign_move(ListType &l) {
-    ListType temp {
-            210, 220, 230, 240, 250,
-            211, 221, 231, 241, 251,
-            212, 222, 232, 242, 252,
-            213, 223, 233, 243, 253
-    };
-    l.operator = (reinterpret_cast<ListType&&>(temp));
-}
+    template <typename ListType>
+    void move(ListType &l) {
+        ListType temp;
+        for (int i = 0; i < 100; i += 5) {
+            temp.push_front(i);
+        }
+        ListType other_list(reinterpret_cast<ListType&&>(temp));
+        l.swap(other_list);
+    }
 
-template <typename ListType>
-static void assign_ilist(ListType &l) {
-    l = {
-            310, 320, 330, 340, 350,
-            311, 321, 331, 341, 351,
-            312, 322, 332, 342, 352,
-            313, 323, 333, 343, 353
-    };
-}
+    template <typename ListType>
+    void initializer_list(ListType &l) {
+        ListType temp {
+            10, 20, 30, 40, 50,
+            11, 21, 31, 41, 51,
+            12, 22, 32, 42, 52,
+            13, 23, 33, 43, 53
+        };
+        l.swap(temp);
+    }
 
-template <typename ListType>
-static void assign_method1(ListType &l) {
-    l.assign(std::size_t(22), 90);
-}
+    template <typename ListType>
+    void assign(ListType &l) {
+        ListType temp {
+           10,20,30,40,50,
+           11,21,31,41,51,
+           12,22,32,42,52,
+           13,23,33,43,53
+        };
+        l = temp;
+    }
 
-template <typename ListType>
-static void assign_method2(ListType &l) {
-    l.assign({
-        410, 420, 430, 440, 450,
-        411, 421, 431, 441, 451,
-        412, 422, 432, 442, 452,
-        413, 423, 433, 443, 453
-    });
-}
+    template <typename ListType>
+    void assign_move(ListType &l) {
+        ListType temp {
+            10, 20, 30, 40, 50,
+            11, 21, 31, 41, 51,
+            12, 22, 32, 42, 52,
+            13, 23, 33, 43, 53
+        };
+        l.operator = (reinterpret_cast<ListType&&>(temp));
+    }
 
-template <typename ListType>
-static void assign_method3(ListType &l) {
-    static const int array[] = {
-            71, 72, 73, 74, 75,
-            76, 77, 78, 79, 80,
-            81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90
-    };
-    l.assign(array, array + std::size(array));
-}
+    template <typename ListType>
+    void assign_ilist(ListType &l) {
+        l = {
+                10, 20, 30, 40, 50,
+                11, 21, 31, 41, 51,
+                12, 22, 32, 42, 52,
+                13, 23, 33, 43, 53
+        };
+    }
 
-template <typename ListType>
-static void front(ListType &l) {
-    l.push_front(l.front());
-}
+    template <typename ListType>
+    void assign_method1(ListType &l) {
+        l.assign(std::size_t(22), 90);
+    }
 
-template <typename ListType>
-static void empty(ListType &l) {
-    l.push_front(l.empty());
-}
+    template <typename ListType>
+    void assign_method2(ListType &l) {
+        l.assign({
+            10, 20, 30, 40, 50,
+            11, 21, 31, 41, 51,
+            12, 22, 32, 42, 52,
+            13, 23, 33, 43, 53
+        });
+    }
+
+    template <typename ListType>
+    void assign_method3(ListType &l) {
+        static const int array[] = {
+                71, 72, 73, 74, 75,
+                76, 77, 78, 79, 80,
+                81, 82, 83, 84, 85,
+                86, 87, 88, 89, 90
+        };
+        l.assign(array, array + std::size(array));
+    }
+
+    template <typename ListType>
+    void front(ListType &l) {
+        l.push_front(l.front());
+    }
+
+    template <typename ListType>
+    void empty(ListType &l) {
+        l.push_front(l.empty());
+    }
+
+    void check(
+        std::string message,
+        void (forward_list64_test::*func1)(std::forward_list<T>&),
+        void (forward_list64_test::*func2)(forward_list64<T>&)
+    ) {
+        std::cerr << message << "... ";
+        (this->*func1)(list);
+        (this->*func2)(list64);
+        check("ok");
+    }
+
+    void check(
+        std::string message,
+        std::size_t n,
+        void (forward_list64_test::*func1)(std::forward_list<T>&, std::size_t n),
+        void (forward_list64_test::*func2)(forward_list64<T>&, std::size_t n)
+    ) {
+        std::cerr << message << "... ";
+        (this->*func1)(list, n);
+        (this->*func2)(list64, n);
+        check("ok");
+    }
+
+public:
+    void test() {
+        std::cerr << "sizeof element: " << sizeof(T) << '\n';
+
+        for (std::size_t n: {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 40, 80} ) {
+            check(
+                "   .push_front " + std::to_string(n) + " times",
+                n,
+                &self_type::create_list, &self_type::create_list
+            );
+        }
+        check(
+            "   .clear",
+            &self_type::clear_list, &self_type::clear_list
+        );
+        check(
+            "   .empty",
+            &self_type::empty, &self_type::empty
+        );
+        check(
+            "   .constructor(IteratorT, IteratorT)",
+            &self_type::create_list_from_array, &self_type::create_list_from_array
+        );
+        check(
+            "   .constructor(const forward_list64 &)",
+            &self_type::copy, &self_type::copy
+        );
+        check(
+            "   .constructor(forward_list64 &&)",
+            &self_type::move, &self_type::move
+        );
+        check(
+            "   .constructor(std::initializer_list<T>)",
+            &self_type::initializer_list, &self_type::initializer_list
+        );
+        check(
+            "   .operator = (const forward_list64 &)",
+            &self_type::assign, &self_type::assign
+        );
+        check(
+            "   .operator = (forward_list64 &&)",
+            &self_type::assign_move, &self_type::assign_move
+        );
+        check(
+            "   .operator = (std::initializer_list<T>)",
+            &self_type::assign_ilist, &self_type::assign_ilist
+        );
+        check(
+            "   .assign(int, const T &)",
+            &self_type::assign_method1, &self_type::assign_method1
+        );
+        check(
+            "   .assign(std::initializer_list<T>)",
+            &self_type::assign_method2, &self_type::assign_method2
+        );
+        check(
+            "   .assign(IteratorT, IteratorT)",
+            &self_type::assign_method3, &self_type::assign_method3
+        );
+        check(
+            "   .front",
+            &self_type::front, &self_type::front
+        );
+
+        for (std::size_t n = 0; n < 80; ++n) {
+            check(
+                "   .constructor(" + std::to_string(n) + ", const T&) and std::swap... ",
+                n,
+                &self_type::create_list_of_5, &self_type::create_list_of_5
+            );
+        }
+
+        for (std::size_t n = 0; n < 80; ++n) {
+            check(
+                "   .constructor(" + std::to_string(n) + ")... ",
+                n,
+                &self_type::create_N_default_items, &self_type::create_N_default_items
+            );
+        }
+
+        std::cerr << "   .pop_front... ";
+        while (!list.empty()) {
+            list.pop_front();
+            list64.pop_front();
+        }
+        check("");
+
+        // compilation test
+        list.get_allocator();
+        list64.get_allocator();
+    }
+};
 
 int main(int argc, char **argv);
 int main(int argc, char **argv)
 {
-    create_list(list);
-    create_list(list64);
-    check(".push_front");
-
-    clear_list(list);
-    clear_list(list64);
-    check(".clear");
-
-    empty(list);
-    empty(list64);
-    check(".empty");
-
-    for (int n = 0; n < 80; ++n) {
-        create_N_default_items(list, n);
-        create_N_default_items(list64, n);
-    }
-    check(".constructor(int)");
-
-    create_list_of_5(list, 40);
-    create_list_of_5(list64, 40);
-    check(".constructor(int, const T&) and std::swap");
-
-    create_list_from_array(list);
-    create_list_from_array(list64);
-    check(".constructor(IteratorT, IteratorT)");
-
-    copy(list);
-    copy(list64);
-    check(".constructor(const forward_list64 &)");
-
-    move(list);
-    move(list64);
-    check(".constructor(forward_list64 &&)");
-
-    initializer_list(list);
-    initializer_list(list64);
-    check(".constructor(std::initializer_list<T>)");
-
-    assign(list);
-    assign(list64);
-    check(".operator = (const forward_list64 &)");
-
-    assign_move(list);
-    assign_move(list64);
-    check(".operator = (forward_list64 &&)");
-
-    assign_ilist(list);
-    assign_ilist(list64);
-    check(".operator = (std::initializer_list<T>)");
-
-    assign_method1(list);
-    assign_method1(list64);
-    check(".assign(int, const T &)");
-
-    assign_method2(list);
-    assign_method2(list64);
-    check(".assign(std::initializer_list<T>)");
-
-    assign_method3(list);
-    assign_method3(list64);
-    check(".assign(IteratorT, IteratorT)");
-
-    list.get_allocator();
-    list64.get_allocator();
-
-    front(list);
-    front(list64);
-    check(".front");
-
-    while (!list.empty()) {
-        list.pop_front();
-        list64.pop_front();
-    }
-    check(".pop_front");
+    forward_list64_test<long long>().test();
+    forward_list64_test<long>().test();
+    forward_list64_test<int>().test();
+    forward_list64_test<short>().test();
+    forward_list64_test<int8_t>().test();
 }
