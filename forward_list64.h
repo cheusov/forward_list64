@@ -31,19 +31,19 @@ namespace __forward_list64_impl {
         static const int type_size = sizeof(T[2]) / 2;
     };
 
-    template<size_t N>
+    template<std::size_t N>
     struct template_positive {
-        static const size_t positive = N;
+        static const std::size_t positive = N;
     };
 
     template<>
     struct template_positive<0> {
-        static const size_t positive = 1;
+        static const std::size_t positive = 1;
     };
 
     template<typename T, int N, int P>
     struct alignas(64) aligned_list_item {
-        static constexpr size_t max_count = template_positive<(64 - P) / N>::positive;
+        static constexpr std::size_t max_count = template_positive<(64 - P) / N>::positive;
         static constexpr std::uintptr_t item_count_mask = 63;
         static constexpr std::uintptr_t pointer_mask = ~item_count_mask;
 
@@ -55,7 +55,7 @@ namespace __forward_list64_impl {
 
     template<typename T>
     struct unaligned_list_item {
-        static constexpr size_t max_count = 1;
+        static constexpr std::size_t max_count = 1;
         static constexpr std::uintptr_t item_count_mask = sizeof(std::uintptr_t) - 1;
         static constexpr std::uintptr_t pointer_mask = ~item_count_mask;
 
@@ -388,7 +388,7 @@ void forward_list64<T, Allocator>::assign(
     clear();
 
     std::uintptr_t last_block = 0;
-    ssize_t count = _count;
+    long long count = _count;
     while (count > 0) {
         auto block = new list_node_t();
         block->m_next = last_block;
