@@ -304,51 +304,6 @@ public:
     iterator begin() noexcept;
     iterator end() noexcept;
 
-    //TODO:
-    // iterator before_begin() noexcept;
-    // const_iterator before_begin() const noexcept;
-    // const_iterator cbefore_begin() const noexcept;
-    //
-    // size_type max_size() const noexcept;
-    //
-    // insert_after...
-    //
-    // template< class... Args >
-    // iterator emplace_after( const_iterator pos, Args&&... args );
-    //
-    // template< container-compatible-range<T> R >
-    // iterator insert_range_after( const_iterator pos, R&& rg );
-    //
-    // iterator erase_after( const_iterator pos );
-    // iterator erase_after( const_iterator first, const_iterator last );
-    //
-    // template< container-compatible-range<T> R >
-    // iterator insert_range_after( const_iterator pos, R&& rg );
-    //
-    // iterator erase_after( const_iterator pos );
-    //
-    // iterator erase_after( const_iterator first, const_iterator last );
-    //
-    // template< class... Args >
-    // void emplace_front( Args&&... args );
-    //
-    // template< class... Args >
-    // reference emplace_front( Args&&... args );
-    //
-    // template< container-compatible-range<T> R >
-    // void prepend_range( R&& rg );
-    //
-    // void resize( size_type count );
-    //
-    // void resize( size_type count, const value_type& value );
-    //
-    // merge...
-    // splice_after...
-    // remove...
-    //
-    // void reverse() noexcept;
-    //
-
     [[nodiscard]] bool empty() const noexcept;
 
     void pop_front();
@@ -782,15 +737,5 @@ namespace std {
                        const forward_list64<T, Allocator>& rhs ) {
         return lhs != rhs;
     }
-
-    /*
-     template< class T, class Alloc, class U >
-     typename std::forward_list<T, Alloc>::size_type
-        erase( std::forward_list<T, Alloc>& c, const U& value );
-
-     template< class T, class Alloc, class Pred >
-     typename std::forward_list<T, Alloc>::size_type
-        erase_if( std::forward_list<T, Alloc>& c, Pred pred );
-    */
 
 } // namespace std

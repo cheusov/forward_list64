@@ -1,0 +1,130 @@
+=pod
+
+=head1 TODO list:
+
+=over 2
+
+=item *
+
+Insertion and deletion to/from the middle of the list
+
+=over 2
+
+=item *
+
+     namespace std {
+       template< class T, class Alloc, class U >
+       typename forward_list64<T, Alloc>::size_type
+          erase(forward_list64<T, Alloc>& c, const U& value);
+     };
+     
+     namespace std {
+       template< class T, class Alloc, class Pred >
+       typename forward_list64<T, Alloc>::size_type
+          erase_if(forward_list64<T, Alloc>& c, Pred pred);
+     };
+
+=item *
+
+     iterator before_begin() noexcept;
+     const_iterator before_begin() const noexcept;
+     const_iterator cbefore_begin() const noexcept;
+     ...
+
+=item *
+
+     iterator insert_after(const_iterator pos, const T& value);
+     iterator insert_after(const_iterator pos, T&& value);
+     iterator insert_after(const_iterator pos, size_type count, const T& value);
+     template< class InputIt >
+     iterator insert_after(const_iterator pos, InputIt first, InputIt last);
+     iterator insert_after(const_iterator pos, std::initializer_list<T> ilist);
+
+=item *
+
+     template< class... Args >
+     iterator emplace_after(const_iterator pos, Args&&... args);
+
+=item *
+
+     iterator erase_after(const_iterator pos);
+     iterator erase_after(const_iterator first, const_iterator last);
+
+=item *
+
+     template< container-compatible-range<T> R >
+     iterator insert_range_after(const_iterator pos, R&& rg); // C++ 23
+
+=item *
+
+     template< container-compatible-range<T> R >
+     void prepend_range(R&& rg);
+
+=item *
+
+member functions "remove" and "remove_if"
+
+=back
+
+=item *
+
+    template< class... Args >
+       void emplace_front(Args&&... args);
+
+    template< class... Args >
+       reference emplace_front(Args&&... args);
+
+=item *
+
+    size_type max_size() const noexcept;
+
+=item *
+
+    void resize(size_type count);
+    void resize(size_type count, const value_type& value);
+
+=item *
+
+    void merge(forward_list& other);
+    void merge(forward_list&& other);
+    template< class Compare >
+       void merge(forward_list& other, Compare comp);
+    template< class Compare >
+       void merge(forward_list&& other, Compare comp);
+
+=item *
+
+    void reverse() noexcept;
+
+=item *
+
+    void unique(); // until C++ 20
+    size_type unique(); // C++ 20
+    template< class BinaryPredicate >
+       void unique(BinaryPredicate p); // until C++ 20
+    template< class BinaryPredicate >
+       size_type unique(BinaryPredicate p); // C++ 20
+
+=item *
+
+    template< container-compatible-range<T> R >
+       void assign_range(R&& rg); // C++ 23
+
+=item *
+
+    template< container-compatible-range<T> R >
+        void prepend_range(R&& rg); // C++ 23
+
+=item *
+
+    void sort();
+    template< class Compare >
+       void sort(Compare comp);
+
+=item *
+
+operators "<", ">", "<=", etc.
+
+=back
+
+=cut

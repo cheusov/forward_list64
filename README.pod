@@ -148,6 +148,10 @@ template argument for Allocator is ignored for now
 
 some methods are not implemented yet
 
+=item *
+
+see TODO.pod file for detailed list of TODOs
+
 =back
 
 =head1 Links
