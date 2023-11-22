@@ -1,6 +1,7 @@
-PROGS =	bench_forward_list64 bench_forward_list \
-	bench_aligned_alloc bench_malloc forward_list64_test \
-	bench_cacheline bench_posix_memalign
+PROGS =	forward_list64_test  \
+	bench_forward_list64 bench_forward_list bench_vector \
+	bench_aligned_alloc bench_malloc bench_posix_memalign \
+	bench_cacheline
 
 MKINSTALL                =	no
 
@@ -8,6 +9,7 @@ MKINSTALL                =	no
 
 SRCS.bench_forward_list64=	bench_forward_list64.cc
 SRCS.bench_forward_list  =	bench_forward_list.cc
+SRCS.bench_vector        =	bench_vector.cc
 SRCS.bench_posix_memalign=	bench_posix_memalign.c
 SRCS.bench_aligned_alloc =	bench_aligned_alloc.c
 SRCS.bench_malloc        =	bench_malloc.c

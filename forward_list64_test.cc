@@ -304,6 +304,8 @@ public:
     }
 };
 
+#include <memory>
+
 int main(int argc, char **argv);
 int main(int argc, char **argv)
 {
@@ -312,4 +314,6 @@ int main(int argc, char **argv)
     forward_list64_test<int>().test();
     forward_list64_test<short>().test();
     forward_list64_test<int8_t>().test();
+
+    auto ptr = std::shared_ptr<int>(new int(5));
 }

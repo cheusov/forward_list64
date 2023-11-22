@@ -31,7 +31,9 @@ struct mytype {
     char _[8];
 };
 
-const static unsigned BENCH_COUNT=30000000;
+#ifndef PUSH_OP
+# define PUSH_OP push_front
+#endif // PUSH_OP
 
 ///////////////////////////////////////
 // main code
@@ -56,7 +58,7 @@ int main(int argc, char **argv)
     typedef LIST_TYPE list_type;
     list_type list;
     for (int i = 0; i < count; ++i) {
-        list.push_front(value);
+        list.PUSH_OP(value);
     }
 
     return 0;
