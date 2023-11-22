@@ -21,49 +21,9 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <string>
-#include <iostream>
-#include <cstdint>
+#include <vector>
 
-///////////////////////////////////////
-// user-defined settings
-struct mytype {
-    char _[8];
-};
+#define LIST_TYPE std::vector<mytype>
+#define PUSH_OP push_back
 
-#ifndef PUSH_OP
-# define PUSH_OP push_front
-#endif // PUSH_OP
-
-///////////////////////////////////////
-// main code
-static mytype value;
-
-static void usage() {
-    std::cerr << "usage: bench_SOMETHING ITEM_COUNT ITERATION_COUNT\n";
-    exit(1);
-}
-
-int main(int argc, char **argv);
-int main(int argc, char **argv)
-{
-    --argc;
-    ++argv;
-    if (argc != 2) {
-        usage();
-    }
-
-    int item_count = std::stoi(argv[0]);
-    int iteration_count = std::stoi(argv[1]);
-
-    typedef LIST_TYPE list_type;
-    list_type lists[iteration_count];
-    for (int j = 0; j < iteration_count; ++j) {
-        list_type &list = lists[j];
-        for (int i = 0; i < item_count; ++i) {
-                list.PUSH_OP(value);
-        }
-    }
-
-    return 0;
-}
+#include "bench_code.h"
