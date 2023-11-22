@@ -427,7 +427,7 @@ void forward_list64<T, Allocator>::copy(
 }
 
 template <typename T, typename Allocator>
-forward_list64<T, Allocator>::forward_list64(const forward_list64& other, const Allocator& alloc )
+forward_list64<T, Allocator>::forward_list64(const forward_list64& other, const Allocator& alloc)
     : m_first_block(0), m_allocator(alloc)
 {
     copy(other);
@@ -727,14 +727,14 @@ namespace std {
     }
 
     template <class T, class Allocator>
-    bool operator == ( const forward_list64<T, Allocator>& lhs,
-                     const forward_list64<T, Allocator>& rhs ) {
+    bool operator == (const forward_list64<T, Allocator>& lhs,
+                     const forward_list64<T, Allocator>& rhs) {
         return lhs == rhs;
     }
 
     template <class T, class Allocator>
-    bool operator != ( const forward_list64<T, Allocator>& lhs,
-                       const forward_list64<T, Allocator>& rhs ) {
+    bool operator != (const forward_list64<T, Allocator>& lhs,
+                       const forward_list64<T, Allocator>& rhs) {
         return lhs != rhs;
     }
 
