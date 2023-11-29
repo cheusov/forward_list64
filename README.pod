@@ -38,7 +38,7 @@ I<aligned_alloc>. On these systems
 I<aligned_alloc(64, 64)> works 4-18 times slower than I<malloc(64)>.
 Obviously, this dramatically affects the overall performance. On the other hand,
 on NetBSD and FreeBSD operating systems, where I<jemalloc> is the default,
-I<aligned_alloc(64, 64)> has the same performance as I<malloc(64)>.
+I<aligned_alloc(64, 64)> works very fast and has the same performance as I<malloc(64)>.
 
 So, on Linux-es and macOS I'd recommend use one of the following open source
 malloc implementations:
@@ -72,6 +72,8 @@ node structure is as follows.
         std::uint8_t items[56]; // 56 bytes
     }
 
+As you can see one node of B<forward_list64> contains 56 1-byte items.
+
 If the size of item is 4 bytes and the size of pointer is also 4 bytes, then the
 node structure is as follows.
 
@@ -93,7 +95,7 @@ it doesn't fit into 64 bytes and is not aligned to cache line.
 The structure of Node is configured automatically with the help of C++ partial specialization.
 
 The number of items in the node is stored in lower 6 bits
-of the pointer to the next node.
+of the pointer to the node.
 
 =head1 Project
 
