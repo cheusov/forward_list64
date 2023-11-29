@@ -125,6 +125,10 @@ member functions "remove" and "remove_if"
 
 operators "<", ">", "<=", etc.
 
+=item *
+
+replace "typedefs" with "using"
+
 =back
 
 =cut
