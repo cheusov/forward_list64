@@ -64,6 +64,12 @@ Insertion and deletion to/from the middle of the list
 
 member functions "remove" and "remove_if"
 
+=item
+
+in some cases lower bits of the pointer to the node can contain
+bit masks, but the element count. In this case an insertion and deletion
+operations can be implemented without moving or swapping elements within the node.
+
 =back
 
 =item *
@@ -124,6 +130,10 @@ member functions "remove" and "remove_if"
 =item *
 
 operators "<", ">", "<=", etc.
+
+=item *
+
+replace "typedefs" with "using"
 
 =back
 

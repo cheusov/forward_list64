@@ -23,12 +23,17 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "bench_alloc.h"
 
 int main(int argc, char **argv);
 int main(int argc, char **argv)
 {
-    for (unsigned i = 0; i < BENCH_ALLOC_ITEM_COUNT; ++i) {
+    --argc; ++argv;
+    if (argc != 1)
+        return 1;
+
+    int count = atoi(argv[0]);
+
+    for (int i = 0; i < count; ++i) {
         if (!malloc(64)) {
             perror("malloc(3) failed");
             return 1;
