@@ -23,6 +23,6 @@
 
 #include "forward_list64.h"
 
-#define LIST_TYPE forward_list64<mytype>
+#define LIST_TYPE forward_list64
 
 #include "bench_code.h"

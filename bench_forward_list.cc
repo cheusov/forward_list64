@@ -23,6 +23,6 @@
 
 #include <forward_list>
 
-#define LIST_TYPE std::forward_list<mytype>
+#define LIST_TYPE std::forward_list
 
 #include "bench_code.h"

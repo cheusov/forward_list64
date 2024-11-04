@@ -23,7 +23,7 @@
 
 #include <vector>
 
-#define LIST_TYPE std::vector<mytype>
+#define LIST_TYPE std::vector
 #define PUSH_OP push_back
 
 #include "bench_code.h"

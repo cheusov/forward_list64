@@ -21,6 +21,7 @@
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <memory>
 #include <iostream>
 #include <forward_list>
 
@@ -303,8 +304,6 @@ public:
         list64.get_allocator();
     }
 };
-
-#include <memory>
 
 int main(int argc, char **argv);
 int main(int argc, char **argv)

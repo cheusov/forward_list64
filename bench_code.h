@@ -22,13 +22,15 @@
  */
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <cstdint>
 
 ///////////////////////////////////////
 // user-defined settings
+template <int n>
 struct mytype {
-    char _[8];
+    char _[n];
 };
 
 #ifndef PUSH_OP
@@ -37,11 +39,22 @@ struct mytype {
 
 ///////////////////////////////////////
 // main code
-static mytype value;
-
 static void usage() {
-    std::cerr << "usage: bench_SOMETHING ITEM_COUNT ITERATION_COUNT\n";
+    std::cerr << "usage: bench_SOMETHING TYPE_SIZE ITEM_COUNT ITERATION_COUNT\n";
     exit(1);
+}
+
+template <typename T>
+static void run_bench(int item_count, int iteration_count) {
+    typedef LIST_TYPE<T> list_type;
+    std::vector<list_type> lists;
+    lists.resize(iteration_count);
+    for (int j = 0; j < iteration_count; ++j) {
+        list_type &list = lists[j];
+        for (int i = 0; i < item_count; ++i) {
+                list.PUSH_OP(T {});
+        }
+    }
 }
 
 int main(int argc, char **argv);
@@ -49,20 +62,114 @@ int main(int argc, char **argv)
 {
     --argc;
     ++argv;
-    if (argc != 2) {
+    if (argc != 3) {
         usage();
     }
 
-    int item_count = std::stoi(argv[0]);
-    int iteration_count = std::stoi(argv[1]);
+    int type_size = std::stoi(argv[0]);
+    int item_count = std::stoi(argv[1]);
+    int iteration_count = std::stoi(argv[2]);
 
-    typedef LIST_TYPE list_type;
-    list_type lists[iteration_count];
-    for (int j = 0; j < iteration_count; ++j) {
-        list_type &list = lists[j];
-        for (int i = 0; i < item_count; ++i) {
-                list.PUSH_OP(value);
-        }
+    switch (type_size) {
+        case 1:
+            run_bench<mytype<1>>(item_count, iteration_count);
+            break;
+        case 2:
+            run_bench<mytype<2>>(item_count, iteration_count);
+            break;
+        case 3:
+            run_bench<mytype<3>>(item_count, iteration_count);
+            break;
+        case 4:
+            run_bench<mytype<4>>(item_count, iteration_count);
+            break;
+        case 5:
+            run_bench<mytype<5>>(item_count, iteration_count);
+            break;
+        case 6:
+            run_bench<mytype<6>>(item_count, iteration_count);
+            break;
+        case 7:
+            run_bench<mytype<7>>(item_count, iteration_count);
+            break;
+        case 8:
+            run_bench<mytype<8>>(item_count, iteration_count);
+            break;
+        case 9:
+            run_bench<mytype<9>>(item_count, iteration_count);
+            break;
+        case 10:
+            run_bench<mytype<10>>(item_count, iteration_count);
+            break;
+        case 11:
+            run_bench<mytype<11>>(item_count, iteration_count);
+            break;
+        case 12:
+            run_bench<mytype<12>>(item_count, iteration_count);
+            break;
+        case 13:
+            run_bench<mytype<13>>(item_count, iteration_count);
+            break;
+        case 14:
+            run_bench<mytype<14>>(item_count, iteration_count);
+            break;
+        case 15:
+            run_bench<mytype<15>>(item_count, iteration_count);
+            break;
+        case 16:
+            run_bench<mytype<16>>(item_count, iteration_count);
+            break;
+        case 17:
+            run_bench<mytype<17>>(item_count, iteration_count);
+            break;
+        case 18:
+            run_bench<mytype<18>>(item_count, iteration_count);
+            break;
+        case 19:
+            run_bench<mytype<19>>(item_count, iteration_count);
+            break;
+        case 20:
+            run_bench<mytype<20>>(item_count, iteration_count);
+            break;
+        case 21:
+            run_bench<mytype<21>>(item_count, iteration_count);
+            break;
+        case 22:
+            run_bench<mytype<22>>(item_count, iteration_count);
+            break;
+        case 23:
+            run_bench<mytype<23>>(item_count, iteration_count);
+            break;
+        case 24:
+            run_bench<mytype<24>>(item_count, iteration_count);
+            break;
+        case 25:
+            run_bench<mytype<25>>(item_count, iteration_count);
+            break;
+        case 26:
+            run_bench<mytype<26>>(item_count, iteration_count);
+            break;
+        case 27:
+            run_bench<mytype<27>>(item_count, iteration_count);
+            break;
+        case 28:
+            run_bench<mytype<28>>(item_count, iteration_count);
+            break;
+        case 29:
+            run_bench<mytype<29>>(item_count, iteration_count);
+            break;
+        case 30:
+            run_bench<mytype<30>>(item_count, iteration_count);
+            break;
+        case 31:
+            run_bench<mytype<31>>(item_count, iteration_count);
+            break;
+        case 32:
+            run_bench<mytype<32>>(item_count, iteration_count);
+            break;
+        default:
+            std::cerr << "Unsupported type size " << type_size << '\n';
+            return 1;
     }
 
     return 0;
